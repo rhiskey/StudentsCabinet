@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.18.1",
     "core-js": "^3.6.5",
+    "gridjs-vue": "^0.5.2",
     "vee-validate": "^3.4.3",
     "vue": "^2.6.11"
   },

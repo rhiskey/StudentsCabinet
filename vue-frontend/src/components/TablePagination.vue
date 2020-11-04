@@ -2,69 +2,103 @@
   <div class="pagination-table">
     <div id="app">{{data}}</div>
 
+<!-- 
     <ul id="example-1">
-    <li v-for="item in lists" :key="item.id">
+    <li v-for="item in data" :key="item.id">
         {{ item.name }}
     </li>
+    </ul> -->
+
+    <ul id="v-for-object" class="demo">
+    <li v-for="value in demoData"  v-bind:key="value.title">
+        {{ value }}
+    </li>
     </ul>
+
+    <!-- <grid :cols="cols" :rows="rows"></grid> -->
+
+    <grid
+    :auto-width="autoWidth"
+    :cols="cols"
+    :from="from"
+    :language="language"
+    :pagination="pagination"
+    :rows="rows"
+    :search="search"
+    :server="server"
+    :sort="sort"
+    :width="width"
+    ></grid>
+
     <!-- TODO: render dynamic pagination table 20 rows on page -->
   </div>
 </template>
 
 <script>
-// import ''
+import Grid from 'gridjs-vue'
+
 const axios = require("axios");
 
 export default {
   name: "TablePagination",
-  //   props: {
-  //     data: [],
-  //   },
-
+    components: {
+      Grid
+    },
   data() {
     return {
-    //   loading: false,
-    //   post: null,
-    //   error: null,
-      data: [],
+        // cols: ['Make', 'Model', 'Year', 'Color'],
+        // rows: [
+        //   ['Ford', 'Fusion', '2011', 'Silver'],
+        //   ['Chevrolet', 'Cruz', '2018', 'White']
+        // ],
+        
+        // An array containing strings of column headers
+        cols: ['id','Name', 'Surname', 'Email'],
+
+        // AND EITHER an array containing row data
+        rows: [
+          ['1', 'Иван', 'Пупкин', 'some@mail.ru'],
+          ['2', 'Митрофанов', 'Илья', 'some2@mail.ru'],
+        ],
+
+        data: [],
+        demoData: {
+            object: {
+                title: 'How to do lists in Vue',
+                author: 'Jane Doe',
+                publishedAt: '2016-04-10'
+            },
+            object2: {
+                title: 'Example2',
+                author: 'Vasya',
+                publishedAt: '2020-08-15'
+            }
+        },
+        
+        //       // OR a server settings object
+        // server() ({
+        //   url: 'https://api.com/search?q=my%20query',
+        //   then: res => res.data.map(col => [col1.data, col2.data]),
+        //   handle: res => res.status === 404
+        //     ? { data: [] } : res.ok
+        //     ? res.json() : new Error('Something went wrong')
+        // }),
+
+        pagination: true || {},
+        sort: true,
+        autoWidth: true,
     };
   },
   beforeMount() {
     this.getData();
   },
-//   created() {
-//     // fetch the data when the view is created and the data is
-//     // already being observed
-//     this.fetchData();
-//   },
-//   watch: {
-//     // call again the method if the route changes
-//     $route: "fetchData",
-//   },
 
   methods: {
-    // fetchData() {
-    //   this.error = this.post = null;
-    //   this.loading = true;
-    //   const fetchedId = this.$route.params.id;
-    //   // replace `getPost` with your data fetching util / API wrapper
-    //   axios(fetchedId, (err, post) => {
-    //     // make sure this request is the last one we did, discard otherwise
-    //     if (this.$route.params.id !== fetchedId) return;
-    //     this.loading = false;
-    //     if (err) {
-    //       this.error = err.toString();
-    //     } else {
-    //       this.post = post;
-    //     }
-    //   });
-    // },
     async getData() {
-    //   const res = await fetch("https://api.agify.io/?name=michael");
-    //   const data = await res.json();
-    //   this.data = data;
       const { data } = await axios.get("http://127.0.0.1:3000/table");
       this.data = data;
+
+
       
     //   axios({ method: "POST", url: "http://127.0.0.1:8090/calc", data: data, headers: {"content-type": "text/plain" } }).then(result => { 
     //       // this.response = result.data;
