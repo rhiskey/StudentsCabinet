@@ -57,7 +57,7 @@ export default {
     //   const res = await fetch("https://api.agify.io/?name=michael");
     //   const data = await res.json();
     //   this.data = data;
-    const { data } = await axios.get("http://127.0.0.1:3000/table");
+      const { data } = await axios.get("http://127.0.0.1:3000/table");
       this.data = data;
       
     //   axios({ method: "POST", url: "http://127.0.0.1:8090/calc", data: data, headers: {"content-type": "text/plain" } }).then(result => { 
