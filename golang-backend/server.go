@@ -29,15 +29,6 @@ var (
 	cfg      map[string]interface{}
 )
 
-// pg connection
-// const (
-// 	host     = "rhiskey.ddns.net"
-// 	port     = 2059
-// 	user     = "postgres"
-// 	password = "6794"
-// 	dbname   = "postgres"
-// )
-
 // Config
 func init() {
 	jsonByte, err := ioutil.ReadFile("config.json")
