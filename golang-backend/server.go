@@ -56,6 +56,17 @@ func init() {
 	dbname = cfg["dbname"].(string)
 }
 
+func homePageHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := fmt.Fprintf(w, "hello world")
+	checkError(err)
+}
+
+func checkError(err error) {
+	if err != nil {
+		log.Panic(err)
+	}
+}
+
 func main() {
 	http.HandleFunc("/", homePageHandler)
 
@@ -68,15 +79,4 @@ func main() {
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 	fmt.Println(psqlInfo)
-}
-
-func homePageHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := fmt.Fprintf(w, "hello world")
-	checkError(err)
-}
-
-func checkError(err error) {
-	if err != nil {
-		log.Panic(err)
-	}
 }
