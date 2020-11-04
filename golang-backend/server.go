@@ -121,19 +121,19 @@ func table(w http.ResponseWriter, r *http.Request) {
 
 		rows.Scan(valuePtrs...)
 
-		// for i, col := range columns {
+		for i, col := range columns {
 
-		// 	var v interface{}
+			var v interface{}
 
-		// 	val := values[i]
+			val := values[i]
 
-		// 	b, ok := val.([]byte)
+			b, ok := val.([]byte)
 
-		// 	if ok {
-		// 		v = string(b)
-		// 	} else {
-		// 		v = val
-		// 	}
+			if ok {
+				v = string(b)
+			} else {
+				v = val
+			}
 
 		// 	// TODO: Create Json to pass data in FRONT
 		// 	fmt.Println(col, v)
