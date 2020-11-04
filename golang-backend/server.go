@@ -61,6 +61,21 @@ func homePageHandler(w http.ResponseWriter, r *http.Request) {
 	checkError(err)
 }
 
+func table(w http.ResponseWriter, r *http.Request) {
+	_, err := fmt.Fprintf(w, "This will be table data")
+	checkError(err)
+}
+
+func graph1(w http.ResponseWriter, r *http.Request) {
+	_, err := fmt.Fprintf(w, "This will be grap1 data")
+	checkError(err)
+}
+
+func graph2(w http.ResponseWriter, r *http.Request) {
+	_, err := fmt.Fprintf(w, "This will be grap2 data")
+	checkError(err)
+}
+
 func checkError(err error) {
 	if err != nil {
 		log.Panic(err)
@@ -69,6 +84,9 @@ func checkError(err error) {
 
 func main() {
 	http.HandleFunc("/", homePageHandler)
+	http.HandleFunc("/", table)
+	http.HandleFunc("/", graph1)
+	http.HandleFunc("/", graph2)
 
 	fmt.Println("Server listening on port 3000")
 	log.Panic(
