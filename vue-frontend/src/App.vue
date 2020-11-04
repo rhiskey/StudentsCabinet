@@ -3,7 +3,9 @@
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <TablePagination data="[data: passed]"/>
+    <h5>График 1:</h5>
     <Graph1 dataGraph="[x: y, x1:y1]"/>
+    <h5>График 2:</h5>
   </div>
 </template>
 

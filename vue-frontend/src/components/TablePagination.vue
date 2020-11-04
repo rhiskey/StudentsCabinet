@@ -1,7 +1,8 @@
 <template>
   <div class="pagination-table">
+    <h3>Данные из БД:</h3>
     <div id="app">{{data}}</div>
-
+    <h5>Тестовые данные (хардкодинг):</h5>
 <!-- 
     <ul id="example-1">
     <li v-for="item in data" :key="item.id">
@@ -16,7 +17,7 @@
     </ul>
 
     <!-- <grid :cols="cols" :rows="rows"></grid> -->
-
+    <h5>Пример таблицы с пагинацией и сортировкой:</h5>
     <grid
     :auto-width="autoWidth"
     :cols="cols"
