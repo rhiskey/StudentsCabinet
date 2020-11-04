@@ -135,9 +135,9 @@ func table(w http.ResponseWriter, r *http.Request) {
 				v = val
 			}
 
-		// 	// TODO: Create Json to pass data in FRONT
-		// 	fmt.Println(col, v)
-		// }
+			// TODO: Create Json to pass data in FRONT
+			fmt.Println(col, v)
+		}
 	}
 
 	//----------------DB----------

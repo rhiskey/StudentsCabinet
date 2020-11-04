@@ -1,6 +1,12 @@
 <template>
   <div class="pagination-table">
     <div id="app">{{data}}</div>
+
+    <ul id="example-1">
+    <li v-for="item in lists" :key="item.id">
+        {{ item.name }}
+    </li>
+    </ul>
     <!-- TODO: render dynamic pagination table 20 rows on page -->
   </div>
 </template>
@@ -20,7 +26,7 @@ export default {
     //   loading: false,
     //   post: null,
     //   error: null,
-      data: {},
+      data: [],
     };
   },
   beforeMount() {
