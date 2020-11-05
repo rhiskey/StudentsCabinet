@@ -26,7 +26,7 @@ type Config struct {
 	dbname   string
 }
 
-type ParticipantResults struct {
+type ParticipantesResult struct {
 	id                         int    `json:"id"`
 	memberprofileurl           string `json:"member_profile_url"`
 	examurl                    string `json:"exam_url"`
@@ -118,7 +118,7 @@ type DemonstrationExam struct {
 	skilllevel                        string `json:"skill_level"`
 	numberofstudentsactuial           int    `json:"number_of_students_actuial"`
 	nameofthechefexpert               string `json:"name_of_the_chef_expert"`
-	email                             string `json:"	email"`
+	email                             string `json:"email"`
 	expertphone                       string `json:"expert_phone"`
 	region                            string `json:"region"`
 	gestatus                          string `json:"ge_status"`
@@ -208,8 +208,11 @@ func table(w http.ResponseWriter, r *http.Request) {
 
 	//var p []byte
 	// rows, err := db.Query("SELECT * FROM demo_exams LIMIT $1", 1000)
-
-	rows, err := db.Query("SELECT * FROM participant_results ")
+	// var paricipantes ParticipantesResult
+	// var cars []Car
+	// db.First(&paricipantes, params["id"])
+	rows, err := db.Query("SELECT * FROM public.participantesresults")
+	// rows, err := db.Query("SELECT * FROM public.participantesresults")
 	fmt.Println(rows)
 
 	// var result []interface{}
