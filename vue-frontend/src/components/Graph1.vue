@@ -8,10 +8,14 @@
 <script>
 // import d3 from ''
 
+
 export default {
   name: 'Graph1',
   props: {
     dataGraph: []
+  },
+  components:{
+    
   }
 }
 </script>

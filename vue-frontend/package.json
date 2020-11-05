@@ -14,7 +14,8 @@
     "core-js": "^3.6.5",
     "gridjs-vue": "^0.5.2",
     "vee-validate": "^3.4.3",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue2-daterange-picker": "^0.6.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
