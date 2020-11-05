@@ -1,61 +1,69 @@
 <template>
   <div class="graph1">
     <!-- <h1>{{ dataGraph }}</h1> -->
-   <!-- TODO: render diagramm d3 -->
-   <D3BarChart :config="config" :datum="data"></D3BarChart>
+    <!-- TODO: render diagramm d3 -->
   </div>
 </template>
 
 <script>
-import {D3BarChart} from 'vue-d3-charts'
+// import d3 from ''
+const axios = require("axios");
 
 export default {
-  name: 'Graph1',
-    components: {
-      D3BarChart
-    },
-     data() {
-        return {
-            data :[{
-  name: "Lorem",
-  total: 40
-},{
-  name: "Ipsum",
-  total: 21
-},{
-  name: "Dolor",
-  total: 20
-}],
-config: {
-  key: "name",
-  value: "total",
-  color: "steelblue",
-}
-
-        };
-    },
+  name: "Graph1",
   props: {
-    dataGraph: []
-  }
-}
+    dataGraph: [],
+    startDate: Date,
+    endDate: Date,
+  },
+  components: {},
 
-// // data
-// data = [{
-//   name: "Lorem",
-//   total: 30
-// },{
-//   name: "Ipsum",
-//   total: 21
-// },{
-//   name: "Dolor",
-//   total: 20
-// }]
+  beforeMount(){
+    this.mounted();
+  },
 
-// // Configuration
-// config = {
-//   key: "name",
-//   value: "total",
-//   color: "steelblue",
-// }
+  methods: {
+    mounted() {
+      // Pass data from date selector
+      // POST request using axios with error handling
+      const datePeriod = { startDate: "2020-08-01", endDate: "2020-11-05" };
+      axios
+        .post("http://127.0.0.1:3000/graph1", datePeriod)
+        .then((response) => (this.articleId = response.data.id))
+        .catch((error) => {
+          this.errorMessage = error.message;
+          console.error("There was an error!", error);
+        });
+    },
 
+    // // Fire on date change
+    // async sendData() {
+    //   //const { data } = await axios.get("http://127.0.0.1:3000/graph1");
+    //   //this.data = data;
+
+    //   const { data } = await axios({
+    //     method: "POST",
+    //     url: "http://127.0.0.1:3000/graph1",
+    //     data: data,
+    //     headers: { "content-type": "text/plain" },
+    //   })
+    //     .then((result) => {
+    //       // this.response = result.data;
+    //       this.add = result.data["add"];
+    //       this.mul = result.data["mul"];
+    //       this.sub = result.data["sub"];
+    //       this.div = result.data["div"];
+    //       /*eslint-disable*/
+    //       console.log(result.data);
+    //       /*eslint-enable*/
+    //     })
+    //     .catch((error) => {
+    //       /*eslint-disable*/
+    //       console.error(error);
+    //       /*eslint-enable*/
+    //     });
+    //   this.data = data;
+    // },
+  },
+};
 </script>

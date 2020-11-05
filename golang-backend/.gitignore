@@ -16,4 +16,4 @@
 
 # Confing
 config.json
-cars_demo.go
+*.go_

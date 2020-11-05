@@ -90,6 +90,7 @@ export default {
         autoWidth: true,
     };
   },
+  
   beforeMount() {
     this.getData();
   },

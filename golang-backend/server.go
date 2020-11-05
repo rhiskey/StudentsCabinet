@@ -26,7 +26,7 @@ type Config struct {
 	dbname   string
 }
 
-type ParticipantResults struct {
+type ParticipantesResult struct {
 	id                         int    `json:"id"`
 	memberprofileurl           string `json:"member_profile_url"`
 	examurl                    string `json:"exam_url"`
@@ -118,7 +118,7 @@ type DemonstrationExam struct {
 	skilllevel                        string `json:"skill_level"`
 	numberofstudentsactuial           int    `json:"number_of_students_actuial"`
 	nameofthechefexpert               string `json:"name_of_the_chef_expert"`
-	email                             string `json:"	email"`
+	email                             string `json:"email"`
 	expertphone                       string `json:"expert_phone"`
 	region                            string `json:"region"`
 	gestatus                          string `json:"ge_status"`
@@ -208,8 +208,11 @@ func table(w http.ResponseWriter, r *http.Request) {
 
 	//var p []byte
 	// rows, err := db.Query("SELECT * FROM demo_exams LIMIT $1", 1000)
-
+	// var paricipantes ParticipantesResult
+	// var cars []Car
+	// db.First(&paricipantes, params["id"])
 	rows, err := db.Query("SELECT * FROM public.participantesresults")
+	// rows, err := db.Query("SELECT * FROM public.participantesresults")
 	fmt.Println(rows)
 
 	// var result []interface{}
@@ -277,8 +280,107 @@ func table(w http.ResponseWriter, r *http.Request) {
 }
 
 func graph1(w http.ResponseWriter, r *http.Request) {
-	_, err := fmt.Fprintf(w, "This will be grap1 data")
-	checkError(err)
+	if r.URL.Path != "/graph1" {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return
+	}
+	startDate := ""
+	endDate := ""
+
+	switch r.Method {
+	case "GET":
+		//http.ServeFile(w, r, "form.html")
+	case "POST":
+		// Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+		if err := r.ParseForm(); err != nil {
+			fmt.Fprintf(w, "ParseForm() err: %v", err)
+			return
+		}
+		fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
+		startDate = r.FormValue("startDate")
+		endDate = r.FormValue("endDate")
+		fmt.Fprintf(w, "startDate = %s\n", startDate)
+		fmt.Fprintf(w, "endDate = %s\n", endDate)
+	default:
+		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+	}
+	//checkError(err)
+	// Connection String to PG
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	//fmt.Println(psqlInfo)
+
+	// Opening a connection to PG
+	db, err := sql.Open("postgres", psqlInfo)
+
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Successfully connected!")
+
+	// TODO: pass data from fron
+	//startDate := "2020-09-01"
+	//endDate := "2020-10-20"
+	sqlConnectionString := "SELECT * from public.select_graphtest('" + startDate + "', '" + endDate + "')"
+	rows, err := db.Query(sqlConnectionString)
+
+	fmt.Println(rows)
+
+	columns, _ := rows.Columns()
+	count := len(columns)
+	values := make([]interface{}, count)
+	valuePtrs := make([]interface{}, count)
+
+	mylist := list.New()
+
+	for rows.Next() {
+
+		for i, _ := range columns {
+			valuePtrs[i] = &values[i]
+		}
+
+		rows.Scan(valuePtrs...)
+
+		for i, col := range columns {
+
+			var v interface{}
+
+			val := values[i]
+
+			b, ok := val.([]byte)
+
+			if ok {
+				v = string(b)
+			} else {
+				v = val
+			}
+			mylist.PushBack(v)
+			// TODO: Create Json to pass data in FRONT
+			fmt.Println(col, v)
+		}
+	}
+
+	//----------------DB----------
+	//numsResData = process(numsData) // pass data from Database
+
+	//fmt.Println(numsResData)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	// TODO: pass all table not only 1
+	if err := json.NewEncoder(w).Encode(valuePtrs); err != nil {
+		panic(err)
+	}
+
 }
 
 func graph2(w http.ResponseWriter, r *http.Request) {
@@ -295,7 +397,7 @@ func checkError(err error) {
 func main() {
 	http.HandleFunc("/", homePageHandler)
 	http.HandleFunc("/table", table)
-	// http.HandleFunc("/", graph1)
+	http.HandleFunc("/graph1", graph1)
 	// http.HandleFunc("/", graph2)
 
 	fmt.Println("Server listening on port 3000")
