@@ -209,7 +209,7 @@ func table(w http.ResponseWriter, r *http.Request) {
 	//var p []byte
 	// rows, err := db.Query("SELECT * FROM demo_exams LIMIT $1", 1000)
 
-	rows, err := db.Query("SELECT * FROM participant_results ")
+	rows, err := db.Query("SELECT * FROM public.participantesresults")
 	fmt.Println(rows)
 
 	// var result []interface{}
