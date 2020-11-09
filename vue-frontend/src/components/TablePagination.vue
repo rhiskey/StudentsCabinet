@@ -1,7 +1,7 @@
 <template>
   <div class="pagination-table">
     <h3>Данные из БД:</h3>
-    <div id="app">{{data}}</div>
+    <div id="app">{{info.data}}</div>
     <h5>Тестовые данные (хардкодинг):</h5>
 <!-- 
     <ul id="example-1">
@@ -18,18 +18,26 @@
 
     <!-- <grid :cols="cols" :rows="rows"></grid> -->
     <h5>Пример таблицы с пагинацией и сортировкой:</h5>
-    <grid
+    <!-- <grid
     :auto-width="autoWidth"
     :cols="cols"
     :from="from"
-    :language="language"
+    :language="russian"
     :pagination="pagination"
-    :rows="rows"
+    :rows="data"
     :search="search"
     :server="server"
     :sort="sort"
     :width="width"
-    ></grid>
+    ></grid> -->
+
+    <grid
+    :auto-width="autoWidth"
+    :cols="cols"
+    :pagination="pagination"
+    :rows="info.data"
+    :sort="sort"
+    ></grid> 
 
     <!-- TODO: render dynamic pagination table 20 rows on page -->
   </div>
@@ -52,9 +60,9 @@ export default {
         //   ['Ford', 'Fusion', '2011', 'Silver'],
         //   ['Chevrolet', 'Cruz', '2018', 'White']
         // ],
-        
+        info: [],
         // An array containing strings of column headers
-        cols: ['id','Name', 'Surname', 'Email'],
+        cols: ['id','Name', 'Surname', 'Lastname', 'Email'],
 
         // AND EITHER an array containing row data
         rows: [
@@ -90,15 +98,22 @@ export default {
         autoWidth: true,
     };
   },
-  
-  beforeMount() {
-    this.getData();
+
+   mounted() {
+    axios
+      .get('http://127.0.0.1:3000/table')
+      .then(response => (this.info = response, console.log(response)));
   },
+  //beforeMount() {
+  //  this.getData();
+  //},
 
   methods: {
     async getData() {
-      const { data } = await axios.get("http://127.0.0.1:3000/table");
-      this.data = data;
+      //const { data2 } = await axios.get("http://127.0.0.1:3000/table");
+      //console.log(data2)
+      //this.data.data = data2;
+
 
 
       

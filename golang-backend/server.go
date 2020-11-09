@@ -141,6 +141,15 @@ type DemonstrationExam struct {
 	cod                               string `json:"cod"`
 }
 
+// Testtable - Test struct
+type Testtable struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Lastname string `json:"lastname"`
+	Email    string `json:"email"`
+}
+
 var (
 	host     string
 	port     int
@@ -187,7 +196,6 @@ func table(w http.ResponseWriter, r *http.Request) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
-	//fmt.Println(psqlInfo)
 
 	// Opening a connection to PG
 	db, err := sql.Open("postgres", psqlInfo)
@@ -204,77 +212,97 @@ func table(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Successfully connected!")
 
-	//var p
-
-	//var p []byte
-	// rows, err := db.Query("SELECT * FROM demo_exams LIMIT $1", 1000)
-	// var paricipantes ParticipantesResult
-	// var cars []Car
-	// db.First(&paricipantes, params["id"])
-	rows, err := db.Query("SELECT * FROM public.participantesresults")
+	rows, err := db.Query("SELECT * FROM public.testtable")
 	// rows, err := db.Query("SELECT * FROM public.participantesresults")
-	fmt.Println(rows)
-
-	// var result []interface{}
-
-	// cols, _ := rows.Columns()
-	// pointers := make([]interface{}, len(cols))
-	// container := make([]json.RawMessage, len(cols))
-	// for i, _ := range pointers {
-	// 	pointers[i] = &container[i]
-	// }
-	// for rows.Next() {
-	// 	rows.Scan(pointers...)
-	// 	result = append(result, container)
-	// }
-
-	// fmt.Println(container)
-
-	//c.JSON(200, container)
-
-	columns, _ := rows.Columns()
-	count := len(columns)
-	values := make([]interface{}, count)
-	valuePtrs := make([]interface{}, count)
-
-	mylist := list.New()
-
-	for rows.Next() {
-
-		for i, _ := range columns {
-			valuePtrs[i] = &values[i]
-		}
-
-		rows.Scan(valuePtrs...)
-
-		for i, col := range columns {
-
-			var v interface{}
-
-			val := values[i]
-
-			b, ok := val.([]byte)
-
-			if ok {
-				v = string(b)
-			} else {
-				v = val
-			}
-			mylist.PushBack(v)
-			// TODO: Create Json to pass data in FRONT
-			fmt.Println(col, v)
-		}
+	if err != nil {
+		panic(err)
 	}
 
-	//----------------DB----------
-	//numsResData = process(numsData) // pass data from Database
+	defer rows.Close()
+	users := []Testtable{}
 
-	//fmt.Println(numsResData)
+	for rows.Next() {
+		u := Testtable{}
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Lastname, &u.Email)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		users = append(users, u)
+	}
+	//var b []byte
+	var l []Testtable
+
+	// Here the magic happens!
+	//json.Unmarshal(file, &users)
+
+	jsonData, err := json.Marshal(&users)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	for _, u := range users {
+		fmt.Println(u.ID, u.Name, u.Surname, u.Lastname, u.Email)
+		//Store data
+		usr := Testtable{
+			ID:       u.ID,
+			Name:     u.Name,
+			Surname:  u.Surname,
+			Lastname: u.Lastname,
+			Email:    u.Email,
+		}
+
+		//TODO: correctly form json
+		l = append(l, usr)
+
+	}
+
+	// columns, _ := rows.Columns()
+	// count := len(columns)
+	// values := make([]interface{}, count)
+	// valuePtrs := make([]interface{}, count)
+
+	// for rows.Next() {
+
+	// 	for i, _ := range columns {
+	// 		valuePtrs[i] = &values[i]
+	// 	}
+
+	// 	rows.Scan(valuePtrs...)
+
+	// 	for i, col := range columns {
+
+	// 		var v interface{}
+
+	// 		val := values[i]
+
+	// 		b, ok := val.([]byte)
+
+	// 		if ok {
+	// 			v = string(b)
+	// 		} else {
+	// 			v = val
+	// 		}
+
+	// 		fmt.Println(col, v)
+
+	// 	}
+	// }
+
+	//----------------DB----------
+
+	// message := map[string]interface{}{
+	// 	"hello": "world",
+	// 	"life":  42,
+	// 	"embedded": map[string]string{
+	// 		"yes": "of course!",
+	// 	},
+	// }
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(valuePtrs); err != nil {
+	if err := json.NewEncoder(w).Encode(jsonData); err != nil {
 		panic(err)
 	}
 }
